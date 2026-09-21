@@ -8,6 +8,8 @@ app.use(express.static(path.join(__dirname)));
 
 const SYSTEM_PROMPT = fs.readFileSync(path.join(__dirname, 'system_prompt.txt'), 'utf8');
 
+const GEMINI_MODEL = 'gemini-2.0-flash';
+
 app.post('/api/chat', async (req, res) => {
   try {
     const { messages } = req.body;
@@ -16,35 +18,37 @@ app.post('/api/chat', async (req, res) => {
       return res.status(400).json({ error: 'messages requis' });
     }
 
-    const apiKey = process.env.ANTHROPIC_API_KEY;
+    const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
       return res.status(500).json({ error: 'Clé API non configurée sur le serveur.' });
     }
 
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    const contents = messages.map(m => ({
+      role: m.role === 'assistant' ? 'model' : 'user',
+      parts: [{ text: m.content }]
+    }));
+
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${apiKey}`;
+
+    const response = await fetch(url, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01'
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-6',
-        max_tokens: 1000,
-        system: SYSTEM_PROMPT,
-        messages: messages
+        system_instruction: { parts: [{ text: SYSTEM_PROMPT }] },
+        contents: contents,
+        generationConfig: { maxOutputTokens: 1000 }
       })
     });
 
     const data = await response.json();
 
     if (!response.ok) {
-      console.error('Erreur API Anthropic:', data);
+      console.error('Erreur API Gemini:', data);
       return res.status(response.status).json({ error: data.error?.message || 'Erreur API' });
     }
 
-    const textBlocks = (data.content || []).filter(b => b.type === 'text').map(b => b.text);
-    const reply = textBlocks.join('\n') || "Je n'ai pas pu formuler de réponse.";
+    const reply = data.candidates?.[0]?.content?.parts?.[0]?.text
+      || "Je n'ai pas pu formuler de réponse.";
 
     res.json({ reply });
   } catch (err) {
