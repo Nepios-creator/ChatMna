@@ -8,7 +8,7 @@ app.use(express.static(path.join(__dirname)));
 
 const SYSTEM_PROMPT = fs.readFileSync(path.join(__dirname, 'system_prompt.txt'), 'utf8');
 
-const GEMINI_MODEL = 'gemini-1.5-flash';
+const GEMINI_MODEL = 'gemini-2.5-flash';
 
 app.post('/api/chat', async (req, res) => {
   try {
