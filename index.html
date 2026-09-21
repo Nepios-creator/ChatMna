@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ChatMna — Ministère de la Nouvelle Alliance</title>
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0D1B2A">
+<link rel="icon" href="/icon-192.png">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0D1B2A;
+    --bordeaux:#8B1A1A;
+    --gold:#C8A951;
+    --ivory:#F4EDE0;
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;margin:0;}
+  body{
+    background:var(--navy);
+    font-family:'Cormorant Garamond',serif;
+    color:var(--ivory);
+    display:flex;
+    flex-direction:column;
+    height:100vh;
+    overflow:hidden;
+  }
+
+  header{
+    padding:22px 28px 18px;
+    border-bottom:1px solid rgba(200,169,81,0.25);
+    display:flex;
+    align-items:center;
+    gap:16px;
+    flex-shrink:0;
+  }
+  .mark{
+    width:42px;height:42px;
+    border:1.5px solid var(--gold);
+    border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Cinzel',serif;
+    font-size:15px;
+    color:var(--gold);
+    letter-spacing:1px;
+    flex-shrink:0;
+  }
+  .title-block h1{
+    font-family:'Cinzel',serif;
+    font-weight:600;
+    font-size:20px;
+    letter-spacing:1.5px;
+    margin:0;
+    color:var(--ivory);
+  }
+  .title-block p{
+    margin:2px 0 0;
+    font-size:14px;
+    color:var(--gold);
+    font-style:italic;
+    letter-spacing:0.3px;
+  }
+
+  #chat{
+    flex:1;
+    overflow-y:auto;
+    padding:28px clamp(16px,6vw,120px);
+    display:flex;
+    flex-direction:column;
+    gap:22px;
+  }
+  .msg{
+    max-width:640px;
+    line-height:1.55;
+    font-size:19px;
+  }
+  .msg.user{
+    align-self:flex-end;
+    background:var(--bordeaux);
+    color:var(--ivory);
+    padding:14px 20px;
+    border-radius:14px 14px 2px 14px;
+  }
+  .msg.ai{
+    align-self:flex-start;
+    padding:2px 4px 2px 20px;
+    border-left:2px solid var(--gold);
+  }
+  .msg.ai .label{
+    display:block;
+    font-family:'Cinzel',serif;
+    font-size:12px;
+    letter-spacing:2px;
+    color:var(--gold);
+    margin-bottom:6px;
+  }
+  .msg.system{
+    align-self:center;
+    color:rgba(244,237,224,0.55);
+    font-size:16px;
+    font-style:italic;
+    text-align:center;
+    max-width:520px;
+  }
+
+  #inputbar{
+    flex-shrink:0;
+    padding:18px clamp(16px,6vw,120px) 26px;
+    border-top:1px solid rgba(200,169,81,0.25);
+    display:flex;
+    gap:12px;
+  }
+  #inputbar textarea{
+    flex:1;
+    resize:none;
+    background:rgba(244,237,224,0.05);
+    border:1px solid rgba(200,169,81,0.35);
+    border-radius:10px;
+    color:var(--ivory);
+    font-family:'Cormorant Garamond',serif;
+    font-size:18px;
+    padding:12px 16px;
+    line-height:1.4;
+    max-height:120px;
+  }
+  #inputbar textarea:focus{
+    outline:none;
+    border-color:var(--gold);
+  }
+  #inputbar button{
+    background:var(--gold);
+    color:var(--navy);
+    border:none;
+    border-radius:10px;
+    padding:0 26px;
+    font-family:'Cinzel',serif;
+    font-size:14px;
+    letter-spacing:1px;
+    cursor:pointer;
+    transition:opacity 0.15s ease;
+  }
+  #inputbar button:disabled{
+    opacity:0.4;
+    cursor:default;
+  }
+  #inputbar button:not(:disabled):hover{
+    opacity:0.85;
+  }
+
+  .dots span{
+    display:inline-block;
+    width:6px;height:6px;
+    margin-right:4px;
+    border-radius:50%;
+    background:var(--gold);
+    animation:blink 1.2s infinite;
+  }
+  .dots span:nth-child(2){animation-delay:0.2s;}
+  .dots span:nth-child(3){animation-delay:0.4s;}
+  @keyframes blink{
+    0%,80%,100%{opacity:0.2;}
+    40%{opacity:1;}
+  }
+
+  ::-webkit-scrollbar{width:8px;}
+  ::-webkit-scrollbar-thumb{background:rgba(200,169,81,0.3);border-radius:4px;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="mark">SJN</div>
+  <div class="title-block">
+    <h1>CHATMNA</h1>
+    <p>Ministère de la Nouvelle Alliance — École Biblique Kainos</p>
+  </div>
+</header>
+
+<div id="chat">
+  <div class="msg system">Posez votre question. ChatMna répond selon la doctrine du MNA/EBK.</div>
+</div>
+
+<div id="inputbar">
+  <textarea id="input" rows="1" placeholder="Posez votre question…"></textarea>
+  <button id="send">ENVOYER</button>
+</div>
+
+<script>
+const chat = document.getElementById('chat');
+const input = document.getElementById('input');
+const sendBtn = document.getElementById('send');
+let history = [];
+let busy = false;
+
+function addMsg(role, text){
+  const div = document.createElement('div');
+  if(role === 'user'){
+    div.className = 'msg user';
+    div.textContent = text;
+  } else if(role === 'ai'){
+    div.className = 'msg ai';
+    div.innerHTML = '<span class="label">CHATMNA</span>' + text.replace(/\n/g,'<br>');
+  } else {
+    div.className = 'msg system';
+    div.textContent = text;
+  }
+  chat.appendChild(div);
+  chat.scrollTop = chat.scrollHeight;
+  return div;
+}
+
+function addTyping(){
+  const div = document.createElement('div');
+  div.className = 'msg ai';
+  div.innerHTML = '<span class="label">CHATMNA</span><span class="dots"><span></span><span></span><span></span></span>';
+  chat.appendChild(div);
+  chat.scrollTop = chat.scrollHeight;
+  return div;
+}
+
+async function send(){
+  const text = input.value.trim();
+  if(!text || busy) return;
+  busy = true;
+  sendBtn.disabled = true;
+  input.value = '';
+  input.style.height = 'auto';
+
+  addMsg('user', text);
+  history.push({role:'user', content:text});
+
+  const typingEl = addTyping();
+
+  try{
+    const response = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ messages: history })
+    });
+    const data = await response.json();
+    typingEl.remove();
+    if(!response.ok){
+      addMsg('system', data.error || "Une erreur est survenue.");
+    } else {
+      addMsg('ai', data.reply);
+      history.push({role:'assistant', content:data.reply});
+    }
+  }catch(err){
+    typingEl.remove();
+    addMsg('system', "Une erreur est survenue. Vérifiez votre connexion.");
+    console.error(err);
+  }
+
+  busy = false;
+  sendBtn.disabled = false;
+  input.focus();
+}
+
+sendBtn.addEventListener('click', send);
+input.addEventListener('keydown', (e) => {
+  if(e.key === 'Enter' && !e.shiftKey){
+    e.preventDefault();
+    send();
+  }
+});
+input.addEventListener('input', () => {
+  input.style.height = 'auto';
+  input.style.height = Math.min(input.scrollHeight, 120) + 'px';
+});
+
+if('serviceWorker' in navigator){
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch(() => {});
+  });
+}
+</script>
+
+</body>
+</html>
