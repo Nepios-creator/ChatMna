@@ -454,7 +454,7 @@ async function callChat(messages, apiKey){
 function isOverloadError(msg){
   if(!msg) return false;
   const m = msg.toLowerCase();
-  return m.includes('overloaded') || m.includes('high demand') || m.includes('unavailable') || m.includes('503') || m.includes('429');
+  return m.includes('overloaded') || m.includes('high demand') || m.includes('unavailable') || m.includes('503') || m.includes('429') || m.includes('rate limit') || m.includes('too many requests');
 }
 
 async function send(){
