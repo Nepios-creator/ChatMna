@@ -36,7 +36,10 @@ app.post('/api/chat', async (req, res) => {
       body: JSON.stringify({
         system_instruction: { parts: [{ text: SYSTEM_PROMPT }] },
         contents: contents,
-        generationConfig: { maxOutputTokens: 1000 }
+        generationConfig: {
+          maxOutputTokens: 65536,
+          thinkingConfig: { thinkingLevel: 'low' }
+        }
       })
     });
 
