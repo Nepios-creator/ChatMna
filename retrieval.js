@@ -53,10 +53,19 @@ function retrieveRelevant(question, chunks, topN = 8){
       }
     }
     return { ...chunk, score };
-  });
+  }).filter(c => c.score > 0);
 
   scored.sort((a, b) => b.score - a.score);
-  return scored.filter(c => c.score > 0).slice(0, topN);
+  if(scored.length === 0) return [];
+
+  // Concentrer la réponse : privilégier le livre le plus pertinent plutôt que
+  // disperser les extraits entre de nombreux livres différents.
+  const primaryBook = scored[0].book;
+  const sameBook = scored.filter(c => c.book === primaryBook).slice(0, topN);
+  if(sameBook.length >= topN) return sameBook;
+
+  const others = scored.filter(c => c.book !== primaryBook).slice(0, topN - sameBook.length);
+  return [...sameBook, ...others];
 }
 
 function bookTitle(slug){
@@ -67,13 +76,21 @@ function bookTitle(slug){
     'conscience-du-christ-tome1': 'La Conscience du Christ (Tome I)',
     'vraie-histoire-de-satan': 'La Vraie Histoire de Satan',
     'conscience-du-corps-de-christ-tome2': 'La Conscience du Corps de Christ (Tome II)',
-    'traite-des-verites-4': 'Traité des Vérités n°4'
+    'traite-des-verites-1': 'Traité des Vérités n°1',
+    'traite-des-verites-2': 'Traité des Vérités n°2',
+    'traite-des-verites-3': 'Traité des Vérités n°3',
+    'traite-des-verites-4': 'Traité des Vérités n°4',
+    'traite-des-verites-6': 'Traité des Vérités n°6',
+    'traite-des-verites-8': 'Traité des Vérités n°8',
+    'traite-des-verites-9': 'Traité des Vérités n°9',
+    'histoire-de-la-priere': "L'Histoire de la Prière dans les Écritures",
+    'verites-nouvelle-alliance-saint-esprit': 'Les Vérités de la Nouvelle Alliance selon le Saint Esprit'
   };
   return titles[slug] || slug;
 }
 
 function buildContextBlock(question, chunks){
-  const relevant = retrieveRelevant(question, chunks, 8);
+  const relevant = retrieveRelevant(question, chunks, 5);
   if(relevant.length === 0) return '';
   let block = "\n\n=== CONTEXTE DOCUMENTAIRE PERTINENT POUR CETTE QUESTION (extraits réels des livres, à utiliser en priorité) ===\n";
   for(const r of relevant){
