@@ -67,8 +67,7 @@ function bookTitle(slug){
     'conscience-du-christ-tome1': 'La Conscience du Christ (Tome I)',
     'vraie-histoire-de-satan': 'La Vraie Histoire de Satan',
     'conscience-du-corps-de-christ-tome2': 'La Conscience du Corps de Christ (Tome II)',
-    'traite-des-verites-4': 'Traité des Vérités n°4',
-    'sarx-vs-soma': 'Sarx vs Soma'
+    'traite-des-verites-4': 'Traité des Vérités n°4'
   };
   return titles[slug] || slug;
 }
