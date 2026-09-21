@@ -33,7 +33,7 @@
     border-bottom:1px solid rgba(200,169,81,0.25);
     display:flex;
     align-items:center;
-    gap:14px;
+    gap:12px;
     flex-shrink:0;
   }
   .mark{
@@ -46,6 +46,7 @@
     color:var(--gold);
     letter-spacing:1px;
     flex-shrink:0;
+    cursor:pointer;
   }
   .title-block{flex:1; min-width:0;}
   .title-block h1{
@@ -114,13 +115,9 @@
     color:var(--gold);
     margin-bottom:6px;
   }
-  .msg-actions{
-    display:flex;
-    gap:10px;
-  }
+  .msg-actions{ display:flex; gap:10px; }
   .msg-actions button{
-    background:none;
-    border:none;
+    background:none; border:none;
     color:rgba(200,169,81,0.7);
     cursor:pointer;
     font-size:13px;
@@ -138,11 +135,8 @@
     max-width:520px;
   }
   .cursor-blink{
-    display:inline-block;
-    width:8px;
-    height:18px;
-    background:var(--gold);
-    margin-left:2px;
+    display:inline-block; width:8px; height:18px;
+    background:var(--gold); margin-left:2px;
     animation:blink-cursor 0.9s step-start infinite;
     vertical-align:text-bottom;
   }
@@ -156,90 +150,99 @@
     gap:12px;
   }
   #inputbar textarea{
-    flex:1;
-    resize:none;
+    flex:1; resize:none;
     background:rgba(244,237,224,0.05);
     border:1px solid rgba(200,169,81,0.35);
     border-radius:10px;
     color:var(--ivory);
     font-family:'Cormorant Garamond',serif;
-    font-size:18px;
-    padding:12px 16px;
-    line-height:1.4;
-    max-height:120px;
+    font-size:18px; padding:12px 16px; line-height:1.4; max-height:120px;
   }
   #inputbar textarea:focus{ outline:none; border-color:var(--gold); }
   #inputbar button.send{
-    background:var(--gold);
-    color:var(--navy);
-    border:none;
-    border-radius:10px;
-    padding:0 22px;
-    font-family:'Cinzel',serif;
-    font-size:13px;
-    letter-spacing:1px;
-    cursor:pointer;
+    background:var(--gold); color:var(--navy); border:none;
+    border-radius:10px; padding:0 22px;
+    font-family:'Cinzel',serif; font-size:13px; letter-spacing:1px; cursor:pointer;
   }
   #inputbar button.send:disabled{ opacity:0.4; cursor:default; }
 
   ::-webkit-scrollbar{width:8px;}
   ::-webkit-scrollbar-thumb{background:rgba(200,169,81,0.3);border-radius:4px;}
 
+  /* Panneau des conversations */
+  #convPanel{
+    position:fixed; inset:0 30% 0 0;
+    background:var(--navy);
+    border-right:1px solid var(--gold);
+    z-index:90;
+    display:none;
+    flex-direction:column;
+    padding:20px 14px;
+    overflow-y:auto;
+  }
+  #convPanel.open{ display:flex; }
+  #convOverlay{
+    position:fixed; inset:0;
+    background:rgba(0,0,0,0.5);
+    z-index:80;
+    display:none;
+  }
+  #convOverlay.open{ display:block; }
+  #convPanel h2{
+    font-family:'Cinzel',serif; color:var(--gold);
+    font-size:14px; letter-spacing:1.5px; margin:0 0 16px;
+  }
+  .conv-new{
+    background:var(--gold); color:var(--navy); border:none;
+    border-radius:8px; padding:10px; font-family:'Cinzel',serif;
+    font-size:13px; letter-spacing:1px; cursor:pointer; margin-bottom:16px;
+  }
+  .conv-item{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:10px 8px; border-radius:8px; cursor:pointer;
+    font-size:16px; color:rgba(244,237,224,0.85);
+    margin-bottom:4px;
+  }
+  .conv-item:hover{ background:rgba(200,169,81,0.1); }
+  .conv-item.active{ background:rgba(200,169,81,0.18); color:var(--gold); }
+  .conv-item span.title{
+    overflow:hidden; text-overflow:ellipsis; white-space:nowrap; flex:1;
+  }
+  .conv-item button.delete{
+    background:none; border:none; color:rgba(200,169,81,0.5);
+    font-size:14px; cursor:pointer; padding:0 0 0 8px;
+  }
+  .conv-item button.delete:hover{ color:var(--bordeaux); }
+
   /* Modal réglages */
   #settingsModal{
-    display:none;
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,0.6);
-    align-items:center;
-    justify-content:center;
-    z-index:100;
-    padding:20px;
+    display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6);
+    align-items:center; justify-content:center; z-index:100; padding:20px;
   }
   #settingsModal.open{ display:flex; }
   .modal-box{
-    background:var(--navy);
-    border:1px solid var(--gold);
-    border-radius:12px;
-    padding:26px;
-    max-width:420px;
-    width:100%;
+    background:var(--navy); border:1px solid var(--gold); border-radius:12px;
+    padding:26px; max-width:420px; width:100%;
   }
   .modal-box h2{
-    font-family:'Cinzel',serif;
-    color:var(--gold);
-    font-size:16px;
-    letter-spacing:1px;
-    margin:0 0 12px;
+    font-family:'Cinzel',serif; color:var(--gold); font-size:16px;
+    letter-spacing:1px; margin:0 0 12px;
   }
   .modal-box p{
-    font-size:16px;
-    line-height:1.5;
-    margin:0 0 14px;
-    color:rgba(244,237,224,0.85);
+    font-size:16px; line-height:1.5; margin:0 0 14px; color:rgba(244,237,224,0.85);
   }
   .modal-box a{ color:var(--gold); }
   .modal-box input{
-    width:100%;
-    padding:10px 12px;
-    border-radius:8px;
+    width:100%; padding:10px 12px; border-radius:8px;
     border:1px solid rgba(200,169,81,0.4);
-    background:rgba(244,237,224,0.05);
-    color:var(--ivory);
-    font-size:15px;
-    margin-bottom:14px;
+    background:rgba(244,237,224,0.05); color:var(--ivory);
+    font-size:15px; margin-bottom:14px;
   }
   .modal-actions{ display:flex; gap:10px; justify-content:flex-end; }
   .modal-actions button{
-    font-family:'Cinzel',serif;
-    font-size:13px;
-    letter-spacing:1px;
-    padding:9px 18px;
-    border-radius:8px;
-    cursor:pointer;
-    border:1px solid rgba(200,169,81,0.4);
-    background:none;
-    color:var(--ivory);
+    font-family:'Cinzel',serif; font-size:13px; letter-spacing:1px;
+    padding:9px 18px; border-radius:8px; cursor:pointer;
+    border:1px solid rgba(200,169,81,0.4); background:none; color:var(--ivory);
   }
   .modal-actions button.primary{ background:var(--gold); color:var(--navy); border:none; }
 </style>
@@ -247,7 +250,7 @@
 <body>
 
 <header>
-  <div class="mark">SJN</div>
+  <div class="mark" id="menuBtn" title="Conversations">☰</div>
   <div class="title-block">
     <h1>CHATMNA</h1>
     <p>Ministère de la Nouvelle Alliance — École Biblique Kainos</p>
@@ -261,6 +264,13 @@
 <div id="inputbar">
   <textarea id="input" rows="1" placeholder="Posez votre question…"></textarea>
   <button class="send" id="send">ENVOYER</button>
+</div>
+
+<div id="convOverlay"></div>
+<div id="convPanel">
+  <h2>CONVERSATIONS</h2>
+  <button class="conv-new" id="convNewBtn">＋ Nouvelle conversation</button>
+  <div id="convList"></div>
 </div>
 
 <div id="settingsModal">
@@ -283,16 +293,93 @@ const settingsBtn = document.getElementById('settingsBtn');
 const settingsModal = document.getElementById('settingsModal');
 const apiKeyInput = document.getElementById('apiKeyInput');
 const newChatBtn = document.getElementById('newChatBtn');
+const menuBtn = document.getElementById('menuBtn');
+const convPanel = document.getElementById('convPanel');
+const convOverlay = document.getElementById('convOverlay');
+const convList = document.getElementById('convList');
+const convNewBtn = document.getElementById('convNewBtn');
 
-const STORAGE_KEY = 'chatmna_history';
+const STORE_KEY = 'chatmna_conversations_v1';
 const API_KEY_STORAGE = 'chatmna_api_key';
 
-let history = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+let store = loadStore();
 let busy = false;
 
-function saveHistory(){
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
+function loadStore(){
+  try{
+    const raw = localStorage.getItem(STORE_KEY);
+    if(raw) return JSON.parse(raw);
+  }catch(e){}
+  // Migration depuis l'ancien format à une seule conversation, si présent
+  const legacy = localStorage.getItem('chatmna_history');
+  const firstConv = { id: 'c' + Date.now(), title: 'Nouvelle conversation', messages: legacy ? JSON.parse(legacy) : [] };
+  return { conversations: [firstConv], activeId: firstConv.id };
 }
+
+function saveStore(){
+  localStorage.setItem(STORE_KEY, JSON.stringify(store));
+}
+
+function getActive(){
+  return store.conversations.find(c => c.id === store.activeId) || store.conversations[0];
+}
+
+function titleFor(conv){
+  if(conv.title && conv.title !== 'Nouvelle conversation') return conv.title;
+  const firstUser = conv.messages.find(m => m.role === 'user');
+  if(firstUser) return firstUser.content.slice(0, 40) + (firstUser.content.length > 40 ? '…' : '');
+  return 'Nouvelle conversation';
+}
+
+function renderConvList(){
+  convList.innerHTML = '';
+  store.conversations.slice().reverse().forEach(conv => {
+    const item = document.createElement('div');
+    item.className = 'conv-item' + (conv.id === store.activeId ? ' active' : '');
+    const span = document.createElement('span');
+    span.className = 'title';
+    span.textContent = titleFor(conv);
+    item.appendChild(span);
+    if(store.conversations.length > 1){
+      const delBtn = document.createElement('button');
+      delBtn.className = 'delete';
+      delBtn.textContent = '✕';
+      delBtn.onclick = (e) => {
+        e.stopPropagation();
+        if(confirm('Supprimer cette conversation ?')){
+          store.conversations = store.conversations.filter(c => c.id !== conv.id);
+          if(store.activeId === conv.id) store.activeId = store.conversations[0].id;
+          saveStore();
+          renderConvList();
+          loadHistoryUI();
+        }
+      };
+      item.appendChild(delBtn);
+    }
+    item.addEventListener('click', () => {
+      store.activeId = conv.id;
+      saveStore();
+      renderConvList();
+      loadHistoryUI();
+      closeConvPanel();
+    });
+    convList.appendChild(item);
+  });
+}
+
+function openConvPanel(){ renderConvList(); convPanel.classList.add('open'); convOverlay.classList.add('open'); }
+function closeConvPanel(){ convPanel.classList.remove('open'); convOverlay.classList.remove('open'); }
+menuBtn.addEventListener('click', openConvPanel);
+convOverlay.addEventListener('click', closeConvPanel);
+convNewBtn.addEventListener('click', () => {
+  const conv = { id: 'c' + Date.now(), title: 'Nouvelle conversation', messages: [] };
+  store.conversations.push(conv);
+  store.activeId = conv.id;
+  saveStore();
+  renderConvList();
+  loadHistoryUI();
+  closeConvPanel();
+});
 
 function renderMessage(role, text){
   const div = document.createElement('div');
@@ -304,28 +391,7 @@ function renderMessage(role, text){
     const label = document.createElement('div');
     label.className = 'label';
     label.innerHTML = '<span>CHATMNA</span>';
-    const actions = document.createElement('div');
-    actions.className = 'msg-actions';
-    const copyBtn = document.createElement('button');
-    copyBtn.textContent = 'Copier';
-    copyBtn.onclick = () => {
-      navigator.clipboard.writeText(text);
-      copyBtn.textContent = 'Copié ✓';
-      setTimeout(() => copyBtn.textContent = 'Copier', 1500);
-    };
-    const shareBtn = document.createElement('button');
-    shareBtn.textContent = 'Partager';
-    shareBtn.onclick = () => {
-      if(navigator.share){
-        navigator.share({ text: text });
-      } else {
-        navigator.clipboard.writeText(text);
-        shareBtn.textContent = 'Copié ✓';
-        setTimeout(() => shareBtn.textContent = 'Partager', 1500);
-      }
-    };
-    actions.appendChild(copyBtn);
-    actions.appendChild(shareBtn);
+    const actions = buildActions(text);
     label.appendChild(actions);
     const body = document.createElement('div');
     body.innerHTML = text.replace(/\n/g,'<br>');
@@ -340,19 +406,55 @@ function renderMessage(role, text){
   return div;
 }
 
+function buildActions(getText){
+  const actions = document.createElement('div');
+  actions.className = 'msg-actions';
+  const copyBtn = document.createElement('button');
+  copyBtn.textContent = 'Copier';
+  copyBtn.onclick = () => {
+    navigator.clipboard.writeText(typeof getText === 'function' ? getText() : getText);
+    copyBtn.textContent = 'Copié ✓';
+    setTimeout(() => copyBtn.textContent = 'Copier', 1500);
+  };
+  const shareBtn = document.createElement('button');
+  shareBtn.textContent = 'Partager';
+  shareBtn.onclick = () => {
+    const t = typeof getText === 'function' ? getText() : getText;
+    if(navigator.share){ navigator.share({ text: t }); }
+    else {
+      navigator.clipboard.writeText(t);
+      shareBtn.textContent = 'Copié ✓';
+      setTimeout(() => shareBtn.textContent = 'Partager', 1500);
+    }
+  };
+  actions.appendChild(copyBtn);
+  actions.appendChild(shareBtn);
+  return actions;
+}
+
 function loadHistoryUI(){
   chat.innerHTML = '';
-  if(history.length === 0){
+  const conv = getActive();
+  if(conv.messages.length === 0){
     renderMessage('system', 'Posez votre question. ChatMna répond selon la doctrine du MNA/EBK.');
     return;
   }
-  history.forEach(m => renderMessage(m.role, m.content));
+  conv.messages.forEach(m => renderMessage(m.role, m.content));
 }
 
-function newConversation(){
-  history = [];
-  saveHistory();
-  loadHistoryUI();
+async function callChat(messages, apiKey){
+  const response = await fetch('/api/chat', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ messages, apiKey })
+  });
+  return response;
+}
+
+function isOverloadError(msg){
+  if(!msg) return false;
+  const m = msg.toLowerCase();
+  return m.includes('overloaded') || m.includes('high demand') || m.includes('unavailable') || m.includes('503') || m.includes('429');
 }
 
 async function send(){
@@ -363,11 +465,12 @@ async function send(){
   input.value = '';
   input.style.height = 'auto';
 
+  const conv = getActive();
   renderMessage('user', text);
-  history.push({ role:'user', content:text });
-  saveHistory();
+  conv.messages.push({ role:'user', content:text });
+  saveStore();
+  renderConvList();
 
-  // Bulle de réponse en cours de frappe
   const aiDiv = document.createElement('div');
   aiDiv.className = 'msg ai';
   const label = document.createElement('div');
@@ -383,20 +486,27 @@ async function send(){
   chat.scrollTop = chat.scrollHeight;
 
   let fullText = '';
+  const apiKey = localStorage.getItem(API_KEY_STORAGE) || '';
+  const maxAttempts = 3;
+  let lastError = null;
 
-  try{
-    const apiKey = localStorage.getItem(API_KEY_STORAGE) || '';
-    const response = await fetch('/api/chat', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ messages: history, apiKey })
-    });
+  for(let attempt = 1; attempt <= maxAttempts; attempt++){
+    fullText = '';
+    lastError = null;
+    try{
+      const response = await callChat(conv.messages, apiKey);
 
-    if(!response.ok || !response.body){
-      const data = await response.json().catch(() => ({}));
-      aiDiv.remove();
-      renderMessage('system', data.error || "Une erreur est survenue.");
-    } else {
+      if(!response.ok || !response.body){
+        const data = await response.json().catch(() => ({}));
+        lastError = data.error || "Une erreur est survenue.";
+        if(isOverloadError(lastError) && attempt < maxAttempts){
+          body.innerHTML = `<em style="color:rgba(244,237,224,0.5)">Forte affluence, nouvel essai (${attempt}/${maxAttempts})…</em>`;
+          await new Promise(r => setTimeout(r, 2000 * attempt));
+          continue;
+        }
+        break;
+      }
+
       const reader = response.body.getReader();
       const decoder = new TextDecoder();
       let buffer = '';
@@ -407,7 +517,6 @@ async function send(){
         buffer += decoder.decode(value, { stream:true });
         const lines = buffer.split('\n');
         buffer = lines.pop();
-
         for(const line of lines){
           if(!line.startsWith('data: ')) continue;
           const payload = line.slice(6).trim();
@@ -423,41 +532,25 @@ async function send(){
           }catch(e){}
         }
       }
-
       cursor.remove();
-      if(!fullText) fullText = "Je n'ai pas pu formuler de réponse.";
-      body.innerHTML = fullText.replace(/\n/g,'<br>');
-
-      const actions = document.createElement('div');
-      actions.className = 'msg-actions';
-      const copyBtn = document.createElement('button');
-      copyBtn.textContent = 'Copier';
-      copyBtn.onclick = () => {
-        navigator.clipboard.writeText(fullText);
-        copyBtn.textContent = 'Copié ✓';
-        setTimeout(() => copyBtn.textContent = 'Copier', 1500);
-      };
-      const shareBtn = document.createElement('button');
-      shareBtn.textContent = 'Partager';
-      shareBtn.onclick = () => {
-        if(navigator.share){ navigator.share({ text: fullText }); }
-        else {
-          navigator.clipboard.writeText(fullText);
-          shareBtn.textContent = 'Copié ✓';
-          setTimeout(() => shareBtn.textContent = 'Partager', 1500);
-        }
-      };
-      actions.appendChild(copyBtn);
-      actions.appendChild(shareBtn);
-      label.appendChild(actions);
-
-      history.push({ role:'assistant', content: fullText });
-      saveHistory();
+      break; // succès, on sort de la boucle de tentatives
+    }catch(err){
+      lastError = "Une erreur est survenue. Vérifiez votre connexion.";
+      console.error(err);
+      break;
     }
-  }catch(err){
+  }
+
+  if(!fullText){
     aiDiv.remove();
-    renderMessage('system', "Une erreur est survenue. Vérifiez votre connexion.");
-    console.error(err);
+    renderMessage('system', lastError || "Je n'ai pas pu formuler de réponse.");
+  } else {
+    body.innerHTML = fullText.replace(/\n/g,'<br>');
+    label.appendChild(buildActions(() => fullText));
+    conv.messages.push({ role:'assistant', content: fullText });
+    if(conv.title === 'Nouvelle conversation') conv.title = titleFor(conv);
+    saveStore();
+    renderConvList();
   }
 
   busy = false;
@@ -475,7 +568,7 @@ input.addEventListener('input', () => {
 });
 
 newChatBtn.addEventListener('click', () => {
-  if(confirm('Effacer cette conversation et en commencer une nouvelle ?')) newConversation();
+  convNewBtn.click();
 });
 
 settingsBtn.addEventListener('click', () => {
@@ -491,6 +584,7 @@ document.getElementById('saveSettings').addEventListener('click', () => {
 });
 
 loadHistoryUI();
+saveStore();
 
 if('serviceWorker' in navigator){
   window.addEventListener('load', () => {
