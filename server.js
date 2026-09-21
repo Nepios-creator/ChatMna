@@ -10,7 +10,7 @@ app.use(express.static(path.join(__dirname)));
 const SYSTEM_PROMPT = fs.readFileSync(path.join(__dirname, 'system_prompt.txt'), 'utf8');
 const bookChunks = loadBooks(path.join(__dirname, 'books'));
 
-const MISTRAL_MODEL = 'mistral-large-latest';
+const MISTRAL_MODEL = 'mistral-small-latest';
 
 app.post('/api/chat', async (req, res) => {
   try {
