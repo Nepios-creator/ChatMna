@@ -84,7 +84,8 @@ function bookTitle(slug){
     'traite-des-verites-8': 'Traité des Vérités n°8',
     'traite-des-verites-9': 'Traité des Vérités n°9',
     'histoire-de-la-priere': "L'Histoire de la Prière dans les Écritures",
-    'verites-nouvelle-alliance-saint-esprit': 'Les Vérités de la Nouvelle Alliance selon le Saint Esprit'
+    'verites-nouvelle-alliance-saint-esprit': 'Les Vérités de la Nouvelle Alliance selon le Saint Esprit',
+    'glossaire-doctrinal': 'Glossaire Doctrinal'
   };
   return titles[slug] || slug;
 }
