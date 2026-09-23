@@ -8,7 +8,7 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname)));
 
 const SYSTEM_PROMPT = fs.readFileSync(path.join(__dirname, 'system_prompt.txt'), 'utf8');
-const bookChunks = loadBooks(path.join(__dirname, 'books'));
+const bookChunks = loadBooks(path.join(__dirname, 'Books'));
 
 const MISTRAL_MODEL = 'mistral-small-latest';
 
